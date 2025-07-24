@@ -1,90 +1,103 @@
 // game.js
-let score = 0;
-let isGameRunning = false;
-let noteSpeed = 3000;
-const gameDuration = 60000; // 60 seconds
-let noteInterval;
-let gameTimeout;
 
-const lanes = document.querySelectorAll('.lane');
-const scoreDisplay = document.getElementById('score');
-const audio = document.getElementById('audio');
-const startBtn = document.getElementById('start-btn');
-const gameScreen = document.getElementById('game');
-const startScreen = document.getElementById('start-screen');
+document.addEventListener('DOMContentLoaded', () => {
+  let score = 0;
+  let isGameRunning = false;
+  const noteSpeed = 3000; // milliseconds note takes to fall
+  const gameDuration = 60000; // 60 seconds game length
+  let noteInterval;
+  let gameTimeout;
 
-startBtn.addEventListener('click', startGame);
+  const lanes = document.querySelectorAll('.lane');
+  const scoreDisplay = document.getElementById('score');
+  const audio = document.getElementById('audio');
+  const startBtn = document.getElementById('start-btn');
+  const gameScreen = document.getElementById('game');
+  const startScreen = document.getElementById('start-screen');
 
-document.addEventListener('keydown', handleKeyPress);
+  startBtn.addEventListener('click', startGame);
+  document.addEventListener('keydown', handleKeyPress);
 
-function startGame() {
-  isGameRunning = true;
-  score = 0;
-  scoreDisplay.textContent = 'Score: 0';
+  function startGame() {
+    console.log('Game started');
+    isGameRunning = true;
+    score = 0;
+    scoreDisplay.textContent = 'Score: 0';
 
-  startScreen.style.display = 'none';
-  gameScreen.style.display = 'block';
+    startScreen.style.display = 'none';
+    gameScreen.style.display = 'block';
 
-  audio.currentTime = 0;
-  audio.play();
+    audio.currentTime = 0;
+    audio.play();
 
-  noteInterval = setInterval(spawnNote, 600);
-  gameTimeout = setTimeout(endGame, gameDuration);
-}
+    noteInterval = setInterval(spawnNote, 600);
+    gameTimeout = setTimeout(endGame, gameDuration);
+  }
 
-function spawnNote() {
-  const laneIndex = Math.floor(Math.random() * lanes.length);
-  const note = document.createElement('div');
-  note.classList.add('note');
-  note.style.animationDuration = `${noteSpeed / 1000}s`;
+  function spawnNote() {
+    if (!isGameRunning) return;
 
-  lanes[laneIndex].appendChild(note);
+    const laneIndex = Math.floor(Math.random() * lanes.length);
+    const lane = lanes[laneIndex];
 
-  setTimeout(() => {
-    if (lanes[laneIndex].contains(note)) {
-      note.remove();
-    }
-  }, noteSpeed);
-}
+    const note = document.createElement('div');
+    note.classList.add('note');
+    note.style.animationDuration = `${noteSpeed / 1000}s`;
 
-function handleKeyPress(e) {
-  if (!isGameRunning) return;
+    lane.appendChild(note);
 
-  const keyMap = {
-    'a': 0,
-    's': 1,
-    'd': 2,
-    'f': 3
-  };
+    // Remove note after it falls off screen
+    setTimeout(() => {
+      if (lane.contains(note)) {
+        lane.removeChild(note);
+        // Optionally: penalize for missed note here
+      }
+    }, noteSpeed);
 
-  const laneIndex = keyMap[e.key];
+    console.log('Note spawned in lane', laneIndex);
+  }
 
-  if (laneIndex === undefined) return;
+  function handleKeyPress(e) {
+    if (!isGameRunning) return;
 
-  const lane = lanes[laneIndex];
-  const notes = lane.querySelectorAll('.note');
-  const hitbox = lane.querySelector('.hitbox');
+    const keyMap = {
+      'a': 0,
+      's': 1,
+      'd': 2,
+      'f': 3
+    };
 
-  notes.forEach(note => {
-    const noteTop = note.getBoundingClientRect().top;
-    const hitTop = hitbox.getBoundingClientRect().top;
-    const hitBottom = hitbox.getBoundingClientRect().bottom;
+    const laneIndex = keyMap[e.key.toLowerCase()];
+    if (laneIndex === undefined) return;
 
-    if (noteTop >= hitTop && noteTop <= hitBottom) {
+    const lane = lanes[laneIndex];
+    const notes = lane.querySelectorAll('.note');
+    const hitbox = lane.querySelector('.hitbox');
+
+    if (notes.length === 0) return;
+
+    const note = notes[0];
+    const noteRect = note.getBoundingClientRect();
+    const hitboxRect = hitbox.getBoundingClientRect();
+
+    // Check if note is inside hitbox vertically
+    if (noteRect.top >= hitboxRect.top && noteRect.top <= hitboxRect.bottom) {
       note.remove();
       score++;
       scoreDisplay.textContent = `Score: ${score}`;
+      console.log(`Hit note in lane ${laneIndex}, score: ${score}`);
     }
-  });
-}
+  }
 
-function endGame() {
-  isGameRunning = false;
-  clearInterval(noteInterval);
-  clearTimeout(gameTimeout);
-  audio.pause();
-  audio.currentTime = 0;
-  alert(`Game Over! Final Score: ${score}`);
-  gameScreen.style.display = 'none';
-  startScreen.style.display = 'flex';
-}
+  function endGame() {
+    console.log('Game ended');
+    isGameRunning = false;
+    clearInterval(noteInterval);
+    clearTimeout(gameTimeout);
+    audio.pause();
+    audio.currentTime = 0;
+    alert(`Game Over! Final Score: ${score}`);
+    gameScreen.style.display = 'none';
+    startScreen.style.display = 'flex';
+  }
+});

@@ -13,14 +13,44 @@
       font-family: 'Orbitron', sans-serif;
       overflow: hidden;
     }
+
+    #start-screen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      height: 100vh;
+      background: #000;
+      color: #0ff;
+      font-size: 2em;
+      text-align: center;
+    }
+
+    #start-btn {
+      margin-top: 20px;
+      padding: 12px 24px;
+      font-size: 1em;
+      background: #0ff;
+      color: #000;
+      border: none;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: background 0.3s ease;
+    }
+
+    #start-btn:hover {
+      background: #00f0f0;
+    }
+
     #game {
+      display: none;
       position: relative;
       width: 100vw;
       height: 100vh;
       background: linear-gradient(to bottom, #000 30%, #222);
       overflow: hidden;
-      display: none;
     }
+
     .lane {
       position: absolute;
       bottom: 0;
@@ -29,6 +59,7 @@
       border-left: 2px solid #444;
       border-right: 2px solid #444;
     }
+
     .lane:nth-child(1) { left: 0%; }
     .lane:nth-child(2) { left: 25%; }
     .lane:nth-child(3) { left: 50%; }
@@ -65,38 +96,17 @@
       left: 10px;
       font-size: 1.2em;
     }
-
-    #start-screen {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      flex-direction: column;
-      background: #000;
-      color: #0ff;
-      font-size: 2em;
-      text-align: center;
-    }
-
-    #start-btn {
-      margin-top: 20px;
-      padding: 10px 20px;
-      font-size: 1em;
-      background: #0ff;
-      color: #000;
-      border: none;
-      cursor: pointer;
-      border-radius: 8px;
-    }
   </style>
 </head>
 <body>
 
+  <!-- Start Screen -->
   <div id="start-screen">
     <h1>🎧 Hip-Hop Beat Hero</h1>
     <button id="start-btn">Start Game</button>
   </div>
 
+  <!-- Game Container -->
   <div id="game">
     <div id="score">Score: 0</div>
     <div class="lane" data-lane="0"><div class="hitbox"></div></div>
@@ -105,7 +115,25 @@
     <div class="lane" data-lane="3"><div class="hitbox"></div></div>
   </div>
 
+  <!-- Audio -->
   <audio id="audio" src="audio/beathero.mp3" crossorigin="anonymous"></audio>
+
+  <!-- Game Start Script -->
+  <script>
+    const startBtn = document.getElementById('start-btn');
+    const startScreen = document.getElementById('start-screen');
+    const game = document.getElementById('game');
+    const audio = document.getElementById('audio');
+
+    startBtn.addEventListener('click', () => {
+      startScreen.style.display = 'none';
+      game.style.display = 'block';
+      audio.play();
+      if (typeof startGame === 'function') startGame(); // call game.js logic
+    });
+  </script>
+
+  <!-- Game Logic -->
   <script src="game.js"></script>
 
 </body>

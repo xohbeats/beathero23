@@ -1,0 +1,96 @@
+/* styles.css */
+
+body {
+  margin: 0;
+  font-family: 'Orbitron', sans-serif;
+  background-color: #111;
+  color: #fff;
+  overflow: hidden;
+}
+
+#start-screen,
+#game {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+#start-screen {
+  background: linear-gradient(135deg, #1e1e2f, #3a3a5d);
+}
+
+button {
+  padding: 15px 30px;
+  font-size: 20px;
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  background-color: #00ffcc;
+  color: #000;
+  transition: background-color 0.3s ease;
+  margin-top: 20px;
+}
+
+button:hover {
+  background-color: #00ccaa;
+}
+
+#game {
+  display: none;
+  flex-direction: column;
+}
+
+#score {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.lanes {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+  max-width: 800px;
+}
+
+.lane {
+  width: 100px;
+  height: 400px;
+  background-color: #222;
+  border: 2px solid #00ffcc;
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.hitbox {
+  position: absolute;
+  bottom: 10px;
+  width: 100%;
+  height: 40px;
+  background-color: rgba(0, 255, 204, 0.3);
+  border-top: 2px solid #00ffcc;
+}
+
+.note {
+  position: absolute;
+  top: -40px;
+  width: 100%;
+  height: 40px;
+  background-color: #ff0066;
+  animation-name: fall;
+  animation-timing-function: linear;
+}
+
+@keyframes fall {
+  to {
+    top: 100%;
+  }
+}
+
+audio {
+  display: none;
+}

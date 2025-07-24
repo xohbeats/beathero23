@@ -2,117 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Hip-Hop Beat Hero</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-
-  <!-- Start Screen -->
-  <div id="start-screen">
-    <h1>🎧 Hip-Hop Beat Hero 🎵</h1>
-    <button id="start-btn">Start Game</button>
-  </div>
-
-  <!-- Game Container -->
-  <div id="game-container" style="display: none;">
-    <canvas id="gameCanvas" width="800" height="600"></canvas>
-    <div id="score">Score: 0</div>
-    <div id="lives">Lives: 3</div>
-  </div>
-
-  <!-- Audio -->
-  <audio id="beat-audio" src="audio/beathero.mp3" preload="auto"></audio>
-
-  <script src="game.js"></script>
-</body>
-</html>
-
-
-    #start-screen {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      height: 100vh;
-      background: #000;
-      color: #0ff;
-      font-size: 2em;
-      text-align: center;
-    }
-
-    #start-btn {
-      margin-top: 20px;
-      padding: 12px 24px;
-      font-size: 1em;
-      background: #0ff;
-      color: #000;
-      border: none;
-      cursor: pointer;
-      border-radius: 8px;
-      transition: background 0.3s ease;
-    }
-
-    #start-btn:hover {
-      background: #00f0f0;
-    }
-
-    #game {
-      display: none;
-      position: relative;
-      width: 100vw;
-      height: 100vh;
-      background: linear-gradient(to bottom, #000 30%, #222);
-      overflow: hidden;
-    }
-
-    .lane {
-      position: absolute;
-      bottom: 0;
-      width: 25%;
-      height: 100%;
-      border-left: 2px solid #444;
-      border-right: 2px solid #444;
-    }
-
-    .lane:nth-child(2) { left: 0%; }
-    .lane:nth-child(3) { left: 25%; }
-    .lane:nth-child(4) { left: 50%; }
-    .lane:nth-child(5) { left: 75%; }
-
-    .note {
-      position: absolute;
-      width: 80%;
-      height: 40px;
-      background: #0ff;
-      border-radius: 8px;
-      left: 10%;
-      animation: fall linear;
-    }
-
-    @keyframes fall {
-      0% { top: -40px; }
-      100% { top: 100%; }
-    }
-
-    .hitbox {
-      position: absolute;
-      bottom: 10px;
-      width: 80%;
-      height: 20px;
-      background: rgba(255,255,255,0.1);
-      border: 2px solid #0ff;
-      left: 10%;
-    }
-
-    #score {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      font-size: 1.2em;
-    }
-  </style>
 </head>
 <body>
 
@@ -123,7 +16,7 @@
   </div>
 
   <!-- Game Area -->
-  <div id="game">
+  <div id="game" style="display:none;">
     <div id="score">Score: 0</div>
     <div class="lane" data-lane="0"><div class="hitbox"></div></div>
     <div class="lane" data-lane="1"><div class="hitbox"></div></div>
@@ -132,9 +25,9 @@
   </div>
 
   <!-- Audio -->
-  <audio id="audio" src="audio/beathero.mp3" crossorigin="anonymous"></audio>
+  <audio id="audio" src="audio/beathero.mp3" crossorigin="anonymous" preload="auto"></audio>
 
-  <!-- Game Starter -->
+  <!-- Starter Script -->
   <script>
     const startBtn = document.getElementById('start-btn');
     const startScreen = document.getElementById('start-screen');
@@ -145,9 +38,10 @@
       startScreen.style.display = 'none';
       game.style.display = 'block';
       audio.currentTime = 0;
-      audio.play();
+      audio.play().catch(e => console.warn('Audio play was prevented:', e));
+      
       if (typeof startGame === 'function') {
-        startGame(); // calls function from game.js
+        startGame();
       } else {
         console.warn('startGame() not defined in game.js');
       }

@@ -1,71 +1,90 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const startButton = document.getElementById('start-btn');
-  const startScreen = document.getElementById('start-screen');
-  const gameArea = document.getElementById('game-area');
-  const lanes = document.querySelectorAll('.lane');
+// game.js
+let score = 0;
+let isGameRunning = false;
+let noteSpeed = 3000;
+const gameDuration = 60000; // 60 seconds
+let noteInterval;
+let gameTimeout;
 
-  let audioContext;
-  let sourceNode;
-  let analyser;
-  let dataArray;
-  let audio;
-  let animationId;
+const lanes = document.querySelectorAll('.lane');
+const scoreDisplay = document.getElementById('score');
+const audio = document.getElementById('audio');
+const startBtn = document.getElementById('start-btn');
+const gameScreen = document.getElementById('game');
+const startScreen = document.getElementById('start-screen');
 
-  function initAudio() {
-    audio = new Audio('audio/beathero.mp3');
-    audio.crossOrigin = 'anonymous';
-    audio.loop = false;
+startBtn.addEventListener('click', startGame);
 
-    audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    sourceNode = audioContext.createMediaElementSource(audio);
-    analyser = audioContext.createAnalyser();
+document.addEventListener('keydown', handleKeyPress);
 
-    analyser.fftSize = 256;
-    const bufferLength = analyser.frequencyBinCount;
-    dataArray = new Uint8Array(bufferLength);
+function startGame() {
+  isGameRunning = true;
+  score = 0;
+  scoreDisplay.textContent = 'Score: 0';
 
-    sourceNode.connect(analyser);
-    analyser.connect(audioContext.destination);
-  }
+  startScreen.style.display = 'none';
+  gameScreen.style.display = 'block';
 
-  function generateNote() {
-    const laneIndex = Math.floor(Math.random() * lanes.length);
-    const note = document.createElement('div');
-    note.className = 'note';
-    lanes[laneIndex].appendChild(note);
+  audio.currentTime = 0;
+  audio.play();
 
-    let top = -20;
-    const fallInterval = setInterval(() => {
-      top += 5;
-      note.style.top = `${top}px`;
+  noteInterval = setInterval(spawnNote, 600);
+  gameTimeout = setTimeout(endGame, gameDuration);
+}
 
-      if (top > gameArea.offsetHeight) {
-        note.remove();
-        clearInterval(fallInterval);
-      }
-    }, 30);
-  }
+function spawnNote() {
+  const laneIndex = Math.floor(Math.random() * lanes.length);
+  const note = document.createElement('div');
+  note.classList.add('note');
+  note.style.animationDuration = `${noteSpeed / 1000}s`;
 
-  function syncNotesToBeat() {
-    analyser.getByteFrequencyData(dataArray);
-    const average = dataArray.reduce((a, b) => a + b) / dataArray.length;
-    if (average > 100) generateNote();
-  }
+  lanes[laneIndex].appendChild(note);
 
-  function gameLoop() {
-    syncNotesToBeat();
-    animationId = requestAnimationFrame(gameLoop);
-  }
+  setTimeout(() => {
+    if (lanes[laneIndex].contains(note)) {
+      note.remove();
+    }
+  }, noteSpeed);
+}
 
-  function startGame() {
-    initAudio();
-    audio.play();
-    startScreen.style.display = 'none';
-    gameArea.style.display = 'flex';
-    gameLoop();
-  }
+function handleKeyPress(e) {
+  if (!isGameRunning) return;
 
-  startButton.addEventListener('click', () => {
-    startGame();
+  const keyMap = {
+    'a': 0,
+    's': 1,
+    'd': 2,
+    'f': 3
+  };
+
+  const laneIndex = keyMap[e.key];
+
+  if (laneIndex === undefined) return;
+
+  const lane = lanes[laneIndex];
+  const notes = lane.querySelectorAll('.note');
+  const hitbox = lane.querySelector('.hitbox');
+
+  notes.forEach(note => {
+    const noteTop = note.getBoundingClientRect().top;
+    const hitTop = hitbox.getBoundingClientRect().top;
+    const hitBottom = hitbox.getBoundingClientRect().bottom;
+
+    if (noteTop >= hitTop && noteTop <= hitBottom) {
+      note.remove();
+      score++;
+      scoreDisplay.textContent = `Score: ${score}`;
+    }
   });
-});
+}
+
+function endGame() {
+  isGameRunning = false;
+  clearInterval(noteInterval);
+  clearTimeout(gameTimeout);
+  audio.pause();
+  audio.currentTime = 0;
+  alert(`Game Over! Final Score: ${score}`);
+  gameScreen.style.display = 'none';
+  startScreen.style.display = 'flex';
+}

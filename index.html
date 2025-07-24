@@ -2,54 +2,32 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Hip-Hop Beat Hero</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rhythm Tap Game</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-
-  <!-- Start Screen -->
-  <div id="start-screen">
-    <h1>🎧 Hip-Hop Beat Hero</h1>
-    <button id="start-btn">Start Game</button>
-  </div>
-
-  <!-- Game Area -->
-  <div id="game" >
+  <div id="game">
     <div id="score">Score: 0</div>
-    <div class="lane" data-lane="0"><div class="hitbox"></div></div>
-    <div class="lane" data-lane="1"><div class="hitbox"></div></div>
-    <div class="lane" data-lane="2"><div class="hitbox"></div></div>
-    <div class="lane" data-lane="3"><div class="hitbox"></div></div>
+    
+    <div class="lane-container">
+      <div class="lane" id="lane-1">
+        <div class="hitbox"></div>
+      </div>
+      <div class="lane" id="lane-2">
+        <div class="hitbox"></div>
+      </div>
+      <div class="lane" id="lane-3">
+        <div class="hitbox"></div>
+      </div>
+      <div class="lane" id="lane-4">
+        <div class="hitbox"></div>
+      </div>
+    </div>
+
+    <button id="start-button" onclick="startGame()">Start Game</button>
   </div>
 
-  <!-- Audio -->
-  <audio id="audio" src="audio/beathero.mp3" crossorigin="anonymous" preload="auto"></audio>
-
-  <!-- Starter Script -->
-  <script>
-    const startBtn = document.getElementById('start-btn');
-    const startScreen = document.getElementById('start-screen');
-    const game = document.getElementById('game');
-    const audio = document.getElementById('audio');
-
-    startBtn.addEventListener('click', () => {
-      startScreen.style.display = 'none';
-      game.style.display = 'block';
-      audio.currentTime = 0;
-      audio.play().catch(e => console.warn('Audio play was prevented:', e));
-      
-      if (typeof startGame === 'function') {
-        startGame();
-      } else {
-        console.warn('startGame() not defined in game.js');
-      }
-    });
-  </script>
-
-  <!-- Game Logic -->
   <script src="game.js"></script>
-
 </body>
 </html>

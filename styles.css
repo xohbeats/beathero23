@@ -1,96 +1,128 @@
 /* styles.css */
 
-body {
-  margin: 0;
-  font-family: 'Orbitron', sans-serif;
-  background-color: #111;
-  color: #fff;
-  overflow: hidden;
+/* Reset and base */
+* {
+  box-sizing: border-box;
 }
 
-#start-screen,
-#game {
-  width: 100vw;
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: #111;
+  color: #0ff;
+  font-family: 'Orbitron', sans-serif;
+  overflow: hidden;
+  user-select: none;
+}
+
+/* Start Screen */
+#start-screen {
   height: 100vh;
   display: flex;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  justify-content: center;
-  flex-direction: column;
-}
-
-#start-screen {
-  background: linear-gradient(135deg, #1e1e2f, #3a3a5d);
-}
-
-button {
-  padding: 15px 30px;
-  font-size: 20px;
-  cursor: pointer;
-  border: none;
-  border-radius: 8px;
-  background-color: #00ffcc;
-  color: #000;
-  transition: background-color 0.3s ease;
-  margin-top: 20px;
-}
-
-button:hover {
-  background-color: #00ccaa;
-}
-
-#game {
-  display: none;
-  flex-direction: column;
-}
-
-#score {
-  font-size: 24px;
-  margin-bottom: 10px;
-}
-
-.lanes {
-  display: flex;
-  justify-content: center;
+  background: #000;
+  font-size: 2.5rem;
+  text-align: center;
   gap: 20px;
-  width: 100%;
-  max-width: 800px;
+  padding: 20px;
 }
 
-.lane {
-  width: 100px;
-  height: 400px;
-  background-color: #222;
-  border: 2px solid #00ffcc;
+#start-btn {
+  background: #0ff;
+  color: #000;
+  border: none;
+  padding: 15px 40px;
+  border-radius: 12px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 0 15px #0ffaaaff;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+#start-btn:hover,
+#start-btn:focus {
+  background: #00e5e5;
+  box-shadow: 0 0 25px #00e5e5ff;
+  outline: none;
+}
+
+/* Game Container */
+#game {
   position: relative;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(to bottom, #000 30%, #111);
+  display: none;
   overflow: hidden;
-  border-radius: 8px;
 }
 
+/* Score display */
+#score {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-shadow: 0 0 8px #0ff;
+  user-select: none;
+}
+
+/* Lane styling */
+.lane {
+  position: absolute;
+  bottom: 0;
+  width: 25%;
+  height: 100%;
+  border-left: 2px solid #0ff3;
+  border-right: 2px solid #0ff3;
+  box-shadow: inset 0 0 20px #0ff2;
+}
+
+/* Position lanes */
+.lane[data-lane="0"] { left: 0%; }
+.lane[data-lane="1"] { left: 25%; }
+.lane[data-lane="2"] { left: 50%; }
+.lane[data-lane="3"] { left: 75%; }
+
+/* Hitbox at bottom of lanes */
 .hitbox {
   position: absolute;
-  bottom: 10px;
-  width: 100%;
-  height: 40px;
-  background-color: rgba(0, 255, 204, 0.3);
-  border-top: 2px solid #00ffcc;
+  bottom: 15px;
+  left: 10%;
+  width: 80%;
+  height: 30px;
+  border: 3px solid #0ff;
+  background: rgba(0, 255, 255, 0.15);
+  border-radius: 10px;
+  box-shadow: 0 0 15px #0ff;
 }
 
+/* Notes */
 .note {
   position: absolute;
-  top: -40px;
-  width: 100%;
+  width: 80%;
   height: 40px;
-  background-color: #ff0066;
+  background: linear-gradient(135deg, #00fff7, #00b8b8);
+  border-radius: 12px;
+  left: 10%;
   animation-name: fall;
   animation-timing-function: linear;
+  animation-fill-mode: forwards;
+  box-shadow: 0 0 10px #00fff7aa;
 }
 
+/* Animation: falling notes */
 @keyframes fall {
-  to {
-    top: 100%;
+  0% {
+    top: -50px;
+    opacity: 1;
   }
-}
-
-audio {
-  display: none;
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
 }

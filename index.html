@@ -9,24 +9,41 @@
 <body>
   <div id="game">
     <div id="score">Score: 0</div>
-    
+
     <div class="lane-container">
       <div class="lane" id="lane-1">
-        <div class="hitbox"></div>
+        <div class="hitbox" data-lane="1"></div>
       </div>
       <div class="lane" id="lane-2">
-        <div class="hitbox"></div>
+        <div class="hitbox" data-lane="2"></div>
       </div>
       <div class="lane" id="lane-3">
-        <div class="hitbox"></div>
+        <div class="hitbox" data-lane="3"></div>
       </div>
       <div class="lane" id="lane-4">
-        <div class="hitbox"></div>
+        <div class="hitbox" data-lane="4"></div>
       </div>
     </div>
 
-    <button id="start-button" onclick="startGame()">Start Game</button>
+    <button id="start-button">Start Game</button>
   </div>
+
+  <script>
+    const startButton = document.getElementById('start-button');
+    const scoreDisplay = document.getElementById('score');
+
+    startButton.addEventListener('click', () => {
+      startButton.style.display = 'none'; // Hide button
+      startGame(); // Call your actual game logic from game.js
+    });
+
+    function startGame() {
+      // Your game.js should define this in detail
+      console.log('Game started');
+      scoreDisplay.textContent = 'Score: 0';
+      // Initialize score, notes, timing, etc.
+    }
+  </script>
 
   <script src="game.js"></script>
 </body>

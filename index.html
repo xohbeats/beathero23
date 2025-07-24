@@ -60,10 +60,10 @@
       border-right: 2px solid #444;
     }
 
-    .lane:nth-child(1) { left: 0%; }
-    .lane:nth-child(2) { left: 25%; }
-    .lane:nth-child(3) { left: 50%; }
-    .lane:nth-child(4) { left: 75%; }
+    .lane:nth-child(2) { left: 0%; }
+    .lane:nth-child(3) { left: 25%; }
+    .lane:nth-child(4) { left: 50%; }
+    .lane:nth-child(5) { left: 75%; }
 
     .note {
       position: absolute;
@@ -106,7 +106,7 @@
     <button id="start-btn">Start Game</button>
   </div>
 
-  <!-- Game Container -->
+  <!-- Game Area -->
   <div id="game">
     <div id="score">Score: 0</div>
     <div class="lane" data-lane="0"><div class="hitbox"></div></div>
@@ -118,7 +118,7 @@
   <!-- Audio -->
   <audio id="audio" src="audio/beathero.mp3" crossorigin="anonymous"></audio>
 
-  <!-- Game Start Script -->
+  <!-- Game Starter -->
   <script>
     const startBtn = document.getElementById('start-btn');
     const startScreen = document.getElementById('start-screen');
@@ -128,8 +128,13 @@
     startBtn.addEventListener('click', () => {
       startScreen.style.display = 'none';
       game.style.display = 'block';
+      audio.currentTime = 0;
       audio.play();
-      if (typeof startGame === 'function') startGame(); // call game.js logic
+      if (typeof startGame === 'function') {
+        startGame(); // calls function from game.js
+      } else {
+        console.warn('startGame() not defined in game.js');
+      }
     });
   </script>
 
